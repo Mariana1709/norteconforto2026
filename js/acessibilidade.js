@@ -139,6 +139,68 @@ Repor tudo
 document.body.appendChild(acPanel);
 
 /* ==========================================
+   MENU HAMBURGUER
+========================================== */
+
+const header = document.querySelector("header");
+const menuNav = header ? header.querySelector("nav") : null;
+
+if (header && menuNav) {
+    const headerActions = document.createElement("div");
+    headerActions.className = "header-actions";
+
+    const menuButton = document.createElement("button");
+
+    menuButton.type = "button";
+    menuButton.className = "menu-toggle";
+    menuButton.setAttribute("aria-label", "Abrir menu de navegacao");
+    menuButton.setAttribute("aria-expanded", "false");
+    menuButton.innerHTML = `
+        <span></span>
+        <span></span>
+        <span></span>
+    `;
+
+    header.insertBefore(headerActions, menuNav);
+    headerActions.appendChild(menuButton);
+
+    const fecharMenu = () => {
+        menuNav.classList.remove("menu-aberto");
+        menuButton.classList.remove("menu-aberto");
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "Abrir menu de navegacao");
+    };
+
+    menuButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        const aberto = menuNav.classList.toggle("menu-aberto");
+        menuButton.classList.toggle("menu-aberto", aberto);
+        menuButton.setAttribute("aria-expanded", String(aberto));
+        menuButton.setAttribute(
+            "aria-label",
+            aberto ? "Fechar menu de navegacao" : "Abrir menu de navegacao"
+        );
+    });
+
+    menuNav.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", fecharMenu);
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!header.contains(event.target)) {
+            fecharMenu();
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            fecharMenu();
+        }
+    });
+}
+
+/* ==========================================
    ABRIR E FECHAR
 ========================================== */
 acBtn.addEventListener("click", () => {
@@ -1070,8 +1132,14 @@ const searchHeaderBtn = document.createElement("button");
 searchHeaderBtn.id = "searchHeaderBtn";
 searchHeaderBtn.innerHTML = `<img src="${imagePath("search.png")}" alt="Pesquisar">`;
 
-/* inserir ao lado do último link (Contactos) */
-nav.appendChild(searchHeaderBtn);
+/* manter a pesquisa junto aos controlos do cabeçalho */
+const headerActions = document.querySelector(".header-actions");
+
+if (headerActions) {
+    headerActions.appendChild(searchHeaderBtn);
+} else {
+    nav.appendChild(searchHeaderBtn);
+}
 
 /* ==========================================
    MODAL

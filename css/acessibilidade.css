@@ -541,3 +541,20 @@ body.dark-mode .searchItem:hover {
     transition-duration: 0.01ms !important;
   }
 }
+
+@media (max-width: 600px) {
+  #acPanel {
+    width: 100%;
+    padding: 18px 16px;
+  }
+
+  #acBtn {
+    right: 12px;
+    bottom: 12px;
+  }
+
+  #acBtn img {
+    width: 58px;
+    height: 58px;
+  }
+}
